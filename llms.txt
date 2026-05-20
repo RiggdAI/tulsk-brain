@@ -1,0 +1,76 @@
+# Tulsk Brain
+
+> A personal knowledge base for your Hermes agent. Clone, configure, let your agent build it.
+
+Repo: https://github.com/RiggdAI/tulsk-brain
+
+## Core entry points
+
+- [AGENTS.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/AGENTS.md): Operating protocol for AI agents. Start here.
+- [RESOLVER.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/RESOLVER.md): Filing decision tree. Read before creating any page.
+- [schema.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/schema.md): Page conventions and templates.
+- [README.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/README.md): Project overview.
+
+## Directory structure
+
+| Directory | Purpose |
+|-----------|---------|
+| [people/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/people/) | One page per person |
+| [companies/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/companies/) | One page per organization |
+| [deals/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/deals/) | Financial transactions with terms |
+| [meetings/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/meetings/) | Meeting records with analysis |
+| [projects/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/projects/) | Active work with specs |
+| [ideas/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/ideas/) | Possibilities not yet built |
+| [concepts/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/concepts/) | Mental models and frameworks |
+| [writing/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/writing/) | Essays and drafts |
+| [programs/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/programs/) | Major life workstreams |
+| [org/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/org/) | Organization strategy |
+| [media/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/media/) | Public narrative and content |
+| [personal/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/personal/) | Private notes |
+| [sources/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/sources/) | Raw data imports |
+| [prompts/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/prompts/) | Reusable LLM prompts |
+| [inbox/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/inbox/) | Unsorted captures |
+| [archive/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/archive/) | Dead pages |
+| [templates/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/) | Page templates |
+
+## Key principles
+
+| Principle | Description |
+|-----------|-------------|
+| MECE | Every piece of knowledge → exactly one directory |
+| Two-layer | Compiled truth above, timeline below |
+| Enrich on signal | Every meeting/email/mention triggers updates |
+| Source everything | Claims cite their source and date |
+| Cross-reference | Entities link to related entities |
+
+## Page templates
+
+| Template | Use |
+|----------|-----|
+| [templates/person.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/person.md) | Person pages |
+| [templates/company.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/company.md) | Company pages |
+| [templates/meeting.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/meeting.md) | Meeting pages |
+| [templates/project.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/project.md) | Project pages |
+| [templates/concept.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/concept.md) | Concept pages |
+
+## Quick start
+
+```bash
+# Clone and configure
+git clone https://github.com/RiggdAI/tulsk-brain.git ~/brain
+cd ~/brain
+rm -rf .git && git init && git add -A && git commit -m "Initial brain"
+
+# Point Hermes to brain
+# Add to SOUL.md: "Read ~/brain/RESOLVER.md before creating any brain page."
+```
+
+## For AI agents
+
+Read AGENTS.md for the full operating protocol.
+Read RESOLVER.md before creating any page.
+
+---
+
+Built by [Riggd](https://riggd.ai) for Tulsk and Hermes users.
+Based on [gbrain](https://github.com/garrytan/gbrain) architecture.
