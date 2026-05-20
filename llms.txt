@@ -9,7 +9,7 @@ Repo: https://github.com/RiggdAI/tulsk-brain
 - [AGENTS.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/AGENTS.md): Operating protocol for AI agents. Start here.
 - [RESOLVER.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/RESOLVER.md): Filing decision tree. Read before creating any page.
 - [schema.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/schema.md): Page conventions and templates.
-- [README.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/README.md): Project overview.
+- [agents.yaml](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/agents.yaml): Git identity configuration for commits.
 
 ## Directory structure
 
@@ -32,16 +32,51 @@ Repo: https://github.com/RiggdAI/tulsk-brain
 | [inbox/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/inbox/) | Unsorted captures |
 | [archive/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/archive/) | Dead pages |
 | [templates/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/) | Page templates |
+| [skills/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/skills/) | Agent skills and workflows |
+| [scripts/](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/scripts/) | Automation scripts |
 
 ## Key principles
 
 | Principle | Description |
 |-----------|-------------|
 | MECE | Every piece of knowledge → exactly one directory |
-| Two-layer | Compiled truth above, timeline below |
+| Two-layer | Compiled truth above `---`, timeline below |
 | Enrich on signal | Every meeting/email/mention triggers updates |
 | Source everything | Claims cite their source and date |
-| Cross-reference | Entities link to related entities |
+| Cross-reference | Entities link to related entities via `[[path/slug]]` |
+
+## Two-layer page structure
+
+Every brain page has two layers separated by `---`:
+
+**Above the line — Compiled Truth**
+- Executive summary (one paragraph)
+- Current State (structured fields)
+- Open Threads (active items)
+- Cross-references (wikilinks)
+
+**Below the line — Timeline**
+- Append-only evidence log
+- Reverse-chronological
+- Each entry: `**YYYY-MM-DD** | Source — What happened`
+
+## Sourcing claims format
+
+| Source Type | Format |
+|-------------|--------|
+| Observed | `[Claim] — observed: [meeting name, date]` |
+| Self-described | `[Claim] — self-described: [interview, date]` |
+| Inferred | `[Claim] — inferred: [pattern, confidence: high/med/low]` |
+
+## Cross-reference syntax
+
+Use wikilinks to connect entities:
+
+```markdown
+Met with [[people/john-doe]] from [[companies/acme-ventures]].
+Referenced [[concepts/first-principles-thinking]].
+Working on [[projects/series-a-fundraise]].
+```
 
 ## Page templates
 
@@ -49,9 +84,18 @@ Repo: https://github.com/RiggdAI/tulsk-brain
 |----------|-----|
 | [templates/person.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/person.md) | Person pages |
 | [templates/company.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/company.md) | Company pages |
-| [templates/meeting.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/meeting.md) | Meeting pages |
+| [templates/meeting.md](https://raw.githubusercontent.com/RiqgdAI/tulsk-brain/main/templates/meeting.md) | Meeting pages |
 | [templates/project.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/project.md) | Project pages |
 | [templates/concept.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/concept.md) | Concept pages |
+| [templates/deal.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/templates/deal.md) | Deal pages |
+
+## Agent skills
+
+| Skill | Purpose |
+|-------|---------|
+| [skills/quick-start.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/skills/quick-start.md) | Get started in 5 minutes |
+| [skills/brain-maintenance.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/skills/brain-maintenance.md) | Weekly lint and cleanup |
+| [skills/agent-git-identity.md](https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/skills/agent-git-identity.md) | Git commit with correct author |
 
 ## Quick start
 
@@ -60,6 +104,12 @@ Repo: https://github.com/RiggdAI/tulsk-brain
 git clone https://github.com/RiggdAI/tulsk-brain.git ~/brain
 cd ~/brain
 rm -rf .git && git init && git add -A && git commit -m "Initial brain"
+
+# Configure your identity
+nano agents.yaml
+
+# Setup git identity
+./scripts/setup-agent-git-config.sh --global
 
 # Point Hermes to brain
 # Add to SOUL.md: "Read ~/brain/RESOLVER.md before creating any brain page."

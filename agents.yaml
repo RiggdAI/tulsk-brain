@@ -1,0 +1,36 @@
+# Agents Configuration
+# Defines author identity for each agent when committing to git
+# 
+# Location: tulsk-brain/agents.yaml (or ~/.hermes/agents.yaml for global)
+# Usage: Run scripts/setup-agent-git-config.sh to apply
+
+agents:
+  default-agent:
+    name: "Your Name"
+    email: "your-email@example.com"
+    github_user: "your-github-username"
+    description: "Default agent for this brain"
+
+# Default agent (used when no specific agent is identified)
+default: default-agent
+
+# Instructions:
+# 1. Copy this file and customize with your details
+# 2. Add more agents as needed (e.g., work-agent, personal-agent)
+# 3. Run: ./scripts/setup-agent-git-config.sh --global
+
+# Example multi-agent setup:
+# agents:
+#   work-agent:
+#     name: "Your Work Name"
+#     email: "work@company.com"
+#     github_user: "work-username"
+#     description: "Work-related tasks"
+#   
+#   personal-agent:
+#     name: "Your Personal Name"
+#     email: "personal@email.com"
+#     github_user: "personal-username"
+#     description: "Personal tasks"
+#
+# default: work-agent

@@ -15,18 +15,13 @@ A structured wiki where your AI agent stores everything it learns about your wor
 ```bash
 # Clone this template
 git clone https://github.com/RiggdAI/tulsk-brain.git ~/brain
-cd ~/brain
-
-# Remove this template's history, start fresh
-rm -rf .git
-git init
-git add -A
-git commit -m "Initial brain setup"
 
 # Point your Hermes profile to this brain
 # In your SOUL.md or AGENTS.md, add:
 # "Read ~/brain/RESOLVER.md before creating any brain page."
 ```
+
+Your agent will create directories as needed — no empty folders pushed to GitHub.
 
 ## How it works
 
