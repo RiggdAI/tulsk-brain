@@ -2,6 +2,36 @@
 
 Each Hermes profile can have its own Slack bot with unique identity and tokens.
 
+## ⚠️ CRITICAL: One Slack App Token Per Profile
+
+**Each profile MUST use a different Slack App with unique tokens.** Sharing tokens causes fatal conflicts.
+
+### What Happens If You Share Tokens
+
+```
+Profile A starts gateway with xapp-1-ABC...  → ✅ Works
+Profile B starts gateway with xapp-1-ABC...  → ❌ Fails
+
+Error: "Slack app token already in use (PID XXXX)"
+```
+
+Slack's Socket Mode only allows **one active connection per app-level token**. When a second profile tries to connect with the same token:
+1. Slack rejects the connection
+2. Both gateways may fail or become unstable
+3. The error persists even after killing processes
+
+### The Fix
+
+Create one Slack App per profile at https://api.slack.com/apps:
+
+| Profile | Slack App Name | Bot Username | Tokens |
+|---------|----------------|--------------|--------|
+| ai-gary-tan | "AI Gary Tan" | @gary_bot | xapp-1-ABC... |
+| chief-technology-officer-2 | "CTO Agent" | @cto_bot | xapp-1-XYZ... |
+| instagram-agent | "Instagram Agent" | @instagram_bot | xapp-1-123... |
+
+Each app generates its own `xapp-` (app token) and `xoxb-` (bot token).
+
 ## Architecture
 
 ```

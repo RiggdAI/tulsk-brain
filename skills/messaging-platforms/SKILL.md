@@ -44,38 +44,70 @@ hermes gateway list
 # Run gateway for specific profile
 HERMES_PROFILE=profilename hermes gateway run --replace
 
-# Install as user service
-hermes gateway install
-```
+## Automated Setup Scripts
 
-## Automated Setup (Slack)
+For faster setup without LLM overhead, use the platform-specific scripts:
 
-For faster setup without LLM overhead, use the setup script:
+### Slack
 
 ```bash
-# Download and run
-curl -O https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/skills/messaging-platforms/scripts/setup-slack.sh
+curl -O https://raw.githubusercontent.com/RiggdAI/gbrain-data/main/skills/messaging-platforms/scripts/setup-slack.sh
 chmod +x setup-slack.sh
 
-# With flags
 ./setup-slack.sh \
   --bot-token xoxb-xxx \
   --app-token xapp-xxx \
   --allowed-users U01ABC,U02DEF
-
-# Or with environment variables
-SLACK_BOT_TOKEN=xoxb-xxx SLACK_APP_TOKEN=xapp-xxx SLACK_ALLOWED_USERS=U01ABC ./setup-slack.sh
 ```
 
-The script:
-1. Generates `slack-manifest.json` with all required scopes/events
-2. Updates `.env` with tokens and allowed users
-3. Validates token formats
-4. Outputs next steps
+### Telegram
 
-After running, just paste the manifest at https://api.slack.com/apps and install.
+```bash
+curl -O https://raw.githubusercontent.com/RiggdAI/gbrain-data/main/skills/messaging-platforms/scripts/setup-telegram.sh
+chmod +x setup-telegram.sh
+
+./setup-telegram.sh \
+  --bot-token 123456:ABC-DEF \
+  --allowed-users 123456789
+```
+
+### Discord
+
+```bash
+curl -O https://raw.githubusercontent.com/RiggdAI/gbrain-data/main/skills/messaging-platforms/scripts/setup-discord.sh
+chmod +x setup-discord.sh
+
+./setup-discord.sh \
+  --bot-token xxx \
+  --allowed-users 123456789 \
+  --allowed-guilds 987654321
+```
+
+All scripts:
+1. Validate token formats
+2. Update `.env` with credentials
+3. Verify authentication via API
+4. Output next steps
 
 **Key insight**: Gateway is per-profile. Multiple profiles can run gateways simultaneously, each with different bot identities.
+
+## ⚠️ CRITICAL: One Slack App = One Profile
+
+**DO NOT share Slack tokens across profiles.** Each profile needs its own Slack App with unique tokens.
+
+| Wrong | Right |
+|-------|-------|
+| Profile A uses `xapp-1-ABC...` | Profile A uses `xapp-1-ABC...` |
+| Profile B uses `xapp-1-ABC...` ❌ | Profile B uses `xapp-1-XYZ...` ✅ |
+
+**Why this fails:**
+- Slack's Socket Mode only allows ONE connection per `xapp-` token
+- When a second profile tries to connect with the same token, Slack rejects it
+- Error: `"Slack app token already in use (PID XXXX)"`
+- The conflict blocks BOTH gateways from starting
+
+**Solution:**
+Create a separate Slack App for each profile at https://api.slack.com/apps
 
 ---
 
@@ -241,12 +273,23 @@ SLACK_BOT_TOKEN=xoxb-token1,xoxb-token2
 
 ## Pitfalls
 
-1. **Writing custom bot code** - Hermes has built-in gateway support. Don't write custom slack-bolt code unless you have a specific need not covered by the native gateway.
-2. **Forgot to reinstall after scope change** - Slack caches the old config until reinstall
-3. **Missing `files:read` scope** - Bot can chat but can't see images/voice
-4. **Not inviting bot to channel** - Bot won't receive any channel messages
-5. **Messages Tab disabled** - DMs completely blocked, even with correct scopes
-6. **Old tokens in profile** - When creating a new Slack App for a profile, clear old tokens from `.env` and `config.yaml` first. Old tokens can cause conflicts or "account_inactive" errors.
+1. **Sharing Slack tokens across profiles** - Each profile needs its own Slack App with unique tokens. Sharing `xapp-` tokens causes "token already in use" errors and blocks gateways from starting. **Create one Slack App per profile at https://api.slack.com/apps**.
+
+2. **Using LLM for setup steps** - Setup is deterministic; use the scripts instead of loading this skill and following steps manually. Scripts avoid token overhead and are faster for VPS deployment. - Slack CLI is Slack's official CLI tool for API operations. **This is NOT what Hermes uses.** Hermes has a built-in Slack gateway that connects via Socket Mode as a bot. Don't install slack-cli — use `hermes gateway setup`.
+
+2. **Writing custom bot code** - Hermes has built-in gateway support. Don't write custom slack-bolt code unless you have a specific need not covered by the native gateway.
+
+3. **Forgot to reinstall after scope change** - Slack caches the old config until reinstall.
+
+4. **Missing `files:read` scope** - Bot can chat but can't see images/voice.
+
+5. **Not inviting bot to channel** - Bot won't receive any channel messages.
+
+6. **Messages Tab disabled** - DMs completely blocked, even with correct scopes.
+
+7. **Old tokens in profile** - When creating a new Slack App for a profile, clear old tokens from `.env` and `config.yaml` first. Old tokens can cause conflicts or "account_inactive" errors.
+
+8. **Multi-cluster rate limiting** - When running multiple Hermes clusters with multiple profiles, all connected to Slack via socket mode, they share the same LLM API key and compete for the same rate limit quota. This causes 429 errors. **Solution:** Assign separate API keys to different clusters, or reduce the number of active socket connections. Rate limits are per-key, not per-instance.
 
 ---
 
@@ -254,6 +297,31 @@ SLACK_BOT_TOKEN=xoxb-token1,xoxb-token2
 
 - `onboard` - Sync profiles from gbrain-data
 - `agent-git-identity` - Git commit identity
+
+## Scripts
+
+- `scripts/setup-slack.sh` - Automated Slack gateway setup (generates manifest, writes .env, validates tokens)
+- `scripts/restart-gateway.sh` - Restart one or all Hermes gateways (see below)
+
+### Gateway Management Script
+
+```bash
+# Download and use the restart script
+curl -O https://raw.githubusercontent.com/RiggdAI/gbrain-data/main/skills/messaging-platforms/scripts/restart-gateway.sh
+chmod +x restart-gateway.sh
+
+# Show status
+./restart-gateway.sh --status
+
+# Restart specific profile
+./restart-gateway.sh chief-technology-officer-2
+
+# Restart all running gateways
+./restart-gateway.sh --all
+
+# Stop all gateways
+./restart-gateway.sh --stop-all
+```
 
 ## References
 
