@@ -48,6 +48,33 @@ HERMES_PROFILE=profilename hermes gateway run --replace
 hermes gateway install
 ```
 
+## Automated Setup (Slack)
+
+For faster setup without LLM overhead, use the setup script:
+
+```bash
+# Download and run
+curl -O https://raw.githubusercontent.com/RiggdAI/tulsk-brain/main/skills/messaging-platforms/scripts/setup-slack.sh
+chmod +x setup-slack.sh
+
+# With flags
+./setup-slack.sh \
+  --bot-token xoxb-xxx \
+  --app-token xapp-xxx \
+  --allowed-users U01ABC,U02DEF
+
+# Or with environment variables
+SLACK_BOT_TOKEN=xoxb-xxx SLACK_APP_TOKEN=xapp-xxx SLACK_ALLOWED_USERS=U01ABC ./setup-slack.sh
+```
+
+The script:
+1. Generates `slack-manifest.json` with all required scopes/events
+2. Updates `.env` with tokens and allowed users
+3. Validates token formats
+4. Outputs next steps
+
+After running, just paste the manifest at https://api.slack.com/apps and install.
+
 **Key insight**: Gateway is per-profile. Multiple profiles can run gateways simultaneously, each with different bot identities.
 
 ---
